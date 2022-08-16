@@ -40,9 +40,6 @@ class Account(object):
 
 
 
-
-
-    
 class UserAccountORM():
     def __init__(self):
         self.conn = None  # will store the DB connection
@@ -154,7 +151,7 @@ class UserAccountORM():
         res=self.current.execute(sql)
         self.commit()
         self.close_DB()
-        print res
+        print (res)
         return "Ok"
 
 
@@ -186,7 +183,7 @@ def main_test():
     db.delete_user(user1.user_name)
     users= db.get_users()
     for u in users :
-        print u
+        print (u)
 
 if __name__ == "__main__":
     main_test()
