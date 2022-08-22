@@ -1,4 +1,4 @@
-__author__ = 'Yossi'
+__author__ = 'Roni Weiss'
 
 import socket
 import SQL_ORM
@@ -8,6 +8,8 @@ from tcp_by_size import send_with_size, recv_by_size
 
 DEBUG = True
 exit_all = False
+user_list = []
+DIVIDER = '~'
 
 
 def handl_client(sock, tid, db):
@@ -21,9 +23,10 @@ def handl_client(sock, tid, db):
             if data == "":
                 print("Error: Seens Client DC")
                 break
+            if 'EXIT' in data:
+                break
 
             to_send = do_action(data, db)
-
             send_with_size(sock, to_send)
 
         except socket.error as err:
@@ -36,7 +39,7 @@ def handl_client(sock, tid, db):
                 break
 
         except Exception as err:
-            print("General Error:", err.message)
+            print("General Error:", err)
             break
     sock.close()
 
@@ -46,64 +49,27 @@ def do_action(data, db):
     check what client ask and fill to send with the answer
     """
     to_send = "Not Set Yet"
-    action = data[:6]
-    data = data[7:]
-    fields = data.split('|')
+    fields = data.split(DIVIDER)
+    action = fields[0]
+
 
     if DEBUG:
         print("Got client request " + action + " -- " + str(fields))
 
-    if action == "UPDUSR":
-        usr = SQL_ORM.User(fields[0], fields[1], fields[2], fields[3], fields[4],
-                           fields[5], fields[6], fields[7], False)
-        if db.update_user(usr):
-            to_send = "UPDUSRR|" + "Success"
-        else:
-            to_send = "UPDUSRR|" + "Error"
-
-    elif action == "BBBBBB":
-        to_send = "BBBBBBR|" + "b"
-
-    elif action == "CCCCCC":
-        to_send = "CCCCCCR|" + "c"
-
-    elif action == "RULIVE":
-        to_send = "RULIVER|" + "yes i am a live server"
-
-    else:
-        print("Got unknown action from client " + action)
-        to_send = "ERR___R|001|" + "unknown action"
+    if action == 'NUSR':
+        db.new_listener(fields[1], fields[2], fields[3], fields[4], fields[5])
+        to_send = "NURA"
 
     return to_send
 
 
-def q_manager(q, tid):
-    global exit_all
-
-    print("manager start:" + str(tid))
-    while not exit_all:
-        item = q.get()
-        print("manager got somthing:" + str(item))
-        # do some work with it(item)
-
-        q.task_done()
-        time.sleep(0.3)
-    print("Manager say Bye")
-
-
 def main():
-    global exit_all
+    global exit_all, user_list
 
     exit_all = False
-    db = SQL_ORM.UserAccountORM()
+    db = SQL_ORM.ListenersORM()
 
     s = socket.socket()
-
-    q = queue.Queue()
-
-    q.put("Hi for start")
-
-    manager = threading.Thread(target=q_manager, args=(q, 0))
 
     s.bind(("0.0.0.0", 4000))
 
@@ -112,7 +78,7 @@ def main():
 
     threads = []
     i = 1
-    while True:
+    while i < 5:
         cli_s, addr = s.accept()
         t = threading.Thread(target=handl_client, args=(cli_s, i, db))
         t.start()
@@ -122,7 +88,6 @@ def main():
     exit_all = True
     for t in threads:
         t.join()
-    manager.join()
 
     s.close()
 
