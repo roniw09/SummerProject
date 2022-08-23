@@ -42,13 +42,14 @@ def see_info():
 def get_listened_amount():
     username = input("enter username")
     password = input("enter password")
-    msg = f"SILT{DIVIDER}{username}{DIVIDER}{password}"
+    msg = "SILT" + DIVIDER + username + DIVIDER+ password
     return msg
 
 
 def present_data(data, pen):
     fields = data.split(DIVIDER)
     if fields[0] == "NURA":
+        pen.new_account_confirmation()
         return "Account created successfully"
     if fields[0] == "OLIF":
         data = fields[5][3:-2].split("', ")
@@ -58,27 +59,49 @@ def present_data(data, pen):
         print(songs_and_rate)
         pen.create_info_page(fields[1], fields[2], fields[3], fields[4], songs_and_rate)
         return "Page displayed successfully"
+    else:
+        pen.error_page()
+        return "ERROR"
 
 
-def manu():
+def del_listener():
+    username = input("enter username > ")
+    msg = "DELU" + DIVIDER + username
+    return msg
+
+
+def new_song():
+    name = input("enter the song's name > ")
+    rate = input("enter your rate (a number between 0 to 5, can be decimal) > ")
+    msg = "ADDS" + DIVIDER + name + DIVIDER + rate
+    return msg
+
+
+def menu():
     print("1. Create new account\n" + \
           "2. See an account info\n" + \
           "3. Delete an account\n" + \
-          "4. Change your favorite song\n>" + \
-          "5. Add a song and rating to the list of songs you've listened to\n>" + \
-          "6. Get how many songs have you listened to\n>" + \
-          "7. exit\n\n>")
+          "4. Add a song and rating to the list of songs you've listened to\n>" + \
+          "5. Get how many songs have you listened to\n>" + \
+          "6. Change your favorite song\n>"
+          "7. exit\n\n")
 
     data = input("Enter Num> ")
-
-    if data == "7":
-        return "q"
-    elif data == "1":
+    msg = ''
+    if data == "1":
         msg = new_listener()
     elif data == "2":
         msg = see_info()
-    elif data == "6":
+    elif data == "3":
+        msg = del_listener()
+    elif data == "4":
+        msg = new_song()
+    elif data == "5":
         msg = get_listened_amount()
+    elif data == "6":
+        pass
+    elif data == "7":
+        return "q"
     else:
         return "ERR1"
     return msg
@@ -91,7 +114,7 @@ def main():
     pen = create_html.CreateClientPages()
 
     while True:
-        data = manu()
+        data = menu()
         print(data, type(data))
 
         if data == "q":

@@ -57,16 +57,22 @@ def do_action(data, db):
         print("Got client request " + action + " -- " + str(fields))
 
     if action == 'NUSR':
-        db.new_listener(fields[1], fields[2], fields[3], fields[4], fields[5])
-        to_send = 'NURA'
-    if action == 'SWLI':
+        msg = db.new_listener(fields[1], fields[2], fields[3], fields[4], fields[5])
+        if msg == "OK":
+            to_send = 'NURA'
+        else:
+            to_send = "ERR2"
+    elif action == 'SWLI':
         print(fields[1], fields[2])
         info = db.get_single_listener_info(fields[1], fields[2])
+        if info == "err2":
+            return 'ERR2'
         to_send = "OLIF" + DIVIDER
         for x in range(len(info) - 1):
             to_send += info[x] + DIVIDER
         to_send += str(info[-1])
-        print(to_send)
+    elif action == "DELU":
+        to_send = db.delete_listener(fields[1])
 
     return to_send
 
