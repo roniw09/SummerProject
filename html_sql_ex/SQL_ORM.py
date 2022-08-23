@@ -132,3 +132,13 @@ class ListenersORM():
             sql = f"DROP TABLE {username}_listened"
             c.execute(sql)
             return "DELT"
+
+    def get_listened(self, username):
+        with sqlite3.connect("Listeners.db") as db:
+            c = db.cursor()
+            exist = self.check_if_exsist(username)
+            if not exist:
+                return "ERR2"
+            sql = f"SELECT COUNT(song_name) FROM {username}_listened"
+            res = c.execute(sql).fetchone()[0]
+            return str(res)

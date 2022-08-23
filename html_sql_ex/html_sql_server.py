@@ -48,7 +48,7 @@ def do_action(data, db):
     """
     check what client ask and fill to send with the answer
     """
-    to_send = "Not Set Yet"
+    to_send = "ERR1"
     fields = data.split(DIVIDER)
     action = fields[0]
 
@@ -73,6 +73,11 @@ def do_action(data, db):
         to_send += str(info[-1])
     elif action == "DELU":
         to_send = db.delete_listener(fields[1])
+    elif action == "SILT":
+        amount = db.get_listened(fields[1])
+        if amount == "ERR2":
+            return amount
+        to_send = "AOSL" + DIVIDER + amount
 
     return to_send
 
@@ -106,4 +111,5 @@ def main():
     s.close()
 
 
-main()
+if __name__ == '__main__':
+    main()

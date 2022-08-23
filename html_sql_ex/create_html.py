@@ -72,7 +72,7 @@ class CreateClientPages:
 
         webbrowser.open('page.html')
 
-    def del_listener(self):
+    def error_page(self):
         self.clear_page()
         with open('page.html', 'w') as current_page:
             html_template = HEADER + """<html>
@@ -93,7 +93,7 @@ class CreateClientPages:
 
         webbrowser.open('page.html')
 
-    def error_page(self):
+    def del_listener(self):
         self.clear_page()
         with open('page.html', 'w') as current_page:
             html_template = HEADER + """<html>
@@ -104,9 +104,32 @@ class CreateClientPages:
                     <title>Error</title>
                     <link rel="icon" href="properties/icon.png"></link>
                 </head>
-                <body">
+                <body>
                     <h1>Deleted wanted account</h1>
                     <img src="properties/delete.gif">
+                </body>
+            </html>"""
+
+            current_page.write(html_template)
+
+        webbrowser.open('page.html')
+
+    def amount_of_songs(self, amount):
+        self.clear_page()
+        with open('page.html', 'w') as current_page:
+            html_template = HEADER + """<html>
+                <style>
+                    body{background-color:#add8e6; font-family: assistant;}
+                </style>
+                <head>
+                    <title>Error</title>
+                    <link rel="icon" href="properties/icon.png"></link>
+                </head>"""
+            html_template += f"""
+                <body>
+                    <h2>You've listened to...</h2>
+                    <h1>{amount} songs!!</h1>
+                    <img src="properties/amount.gif">
                 </body>
             </html>"""
 

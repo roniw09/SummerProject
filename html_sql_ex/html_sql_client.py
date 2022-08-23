@@ -40,9 +40,8 @@ def see_info():
 
 
 def get_listened_amount():
-    username = input("enter username")
-    password = input("enter password")
-    msg = "SILT" + DIVIDER + username + DIVIDER+ password
+    username = input("enter username > ")
+    msg = "SILT" + DIVIDER + username
     return msg
 
 
@@ -51,7 +50,7 @@ def present_data(data, pen):
     if fields[0] == "NURA":
         pen.new_account_confirmation()
         return "Account created successfully"
-    if fields[0] == "OLIF":
+    elif fields[0] == "OLIF":
         data = fields[5][3:-2].split("', ")
         songs_and_rate = []
         for x in data:
@@ -59,6 +58,12 @@ def present_data(data, pen):
         print(songs_and_rate)
         pen.create_info_page(fields[1], fields[2], fields[3], fields[4], songs_and_rate)
         return "Page displayed successfully"
+    elif fields[0] == "DELT":
+        pen.del_listener()
+        return "Listener deleted successfully"
+    elif fields[0] == "AOSL":
+        pen.amount_of_songs(fields[1])
+        return f"You've listened to {fields[1]} songs"
     else:
         pen.error_page()
         return "ERROR"
@@ -81,10 +86,10 @@ def menu():
     print("1. Create new account\n" + \
           "2. See an account info\n" + \
           "3. Delete an account\n" + \
-          "4. Add a song and rating to the list of songs you've listened to\n>" + \
-          "5. Get how many songs have you listened to\n>" + \
-          "6. Change your favorite song\n>"
-          "7. exit\n\n")
+          "4. Add a song and rating to the list of songs you've listened to\n" + \
+          "5. Get how many songs have you listened to\n" + \
+          "6. Change your favorite song\n"
+          "7. Exit\n\n>")
 
     data = input("Enter Num> ")
     msg = ''
