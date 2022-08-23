@@ -1,13 +1,26 @@
 import webbrowser
 
 HEADER = "<!DOCTYPE html>"
+
+
 class CreateClientPages:
 
     def clear_page(self):
+        """
+        clear last page
+        """
         with open('page.html', 'w') as current_page:
             current_page.truncate(0)
 
     def create_info_page(self, username, password, first_name, last_name, songs_and_rate):
+        """
+        create the info page
+        :param username: the listener's username
+        :param password: the listener's username
+        :param first_name: the listener's first name
+        :param last_name: the listener's last name
+        :param favorite_song: the listener's favorite song
+        """
         self.clear_page()
         with open('page.html', 'w') as current_page:
             html_template = HEADER + """
@@ -50,6 +63,9 @@ class CreateClientPages:
         webbrowser.open('page.html')
 
     def new_account_confirmation(self):
+        """
+        confirm a new listener was created
+        """
         self.clear_page()
         with open('page.html', 'w') as current_page:
             html_template = HEADER + """<html>
@@ -73,6 +89,9 @@ class CreateClientPages:
         webbrowser.open('page.html')
 
     def error_page(self):
+        """
+        present there was an error
+        """
         self.clear_page()
         with open('page.html', 'w') as current_page:
             html_template = HEADER + """<html>
@@ -94,6 +113,9 @@ class CreateClientPages:
         webbrowser.open('page.html')
 
     def del_listener(self):
+        """
+        confirm a new listener was deleted
+        """
         self.clear_page()
         with open('page.html', 'w') as current_page:
             html_template = HEADER + """<html>
@@ -101,7 +123,7 @@ class CreateClientPages:
                     body{background-color:#add8e6; font-family: assistant;}
                 </style>
                 <head>
-                    <title>Error</title>
+                    <title>Deleted</title>
                     <link rel="icon" href="properties/icon.png"></link>
                 </head>
                 <body>
@@ -115,6 +137,9 @@ class CreateClientPages:
         webbrowser.open('page.html')
 
     def amount_of_songs(self, amount):
+        """
+        presents how many songs a listener listened to
+        """
         self.clear_page()
         with open('page.html', 'w') as current_page:
             html_template = HEADER + """<html>
@@ -122,7 +147,7 @@ class CreateClientPages:
                     body{background-color:#add8e6; font-family: assistant;}
                 </style>
                 <head>
-                    <title>Error</title>
+                    <title>Songs Amount</title>
                     <link rel="icon" href="properties/icon.png"></link>
                 </head>"""
             html_template += f"""
@@ -132,6 +157,31 @@ class CreateClientPages:
                     <img src="properties/amount.gif">
                 </body>
             </html>"""
+
+            current_page.write(html_template)
+
+        webbrowser.open('page.html')
+
+    def new_song_added(self):
+        """
+        confirm a new song was added
+        """
+        self.clear_page()
+        with open('page.html', 'w') as current_page:
+            html_template = HEADER + """<html>
+                        <style>
+                            body{background-color:#add8e6; font-family: assistant;}
+                        </style>
+                        <head>
+                            <title>New Song</title>
+                            <link rel="icon" href="properties/icon.png"></link>
+                        </head>
+                        <body>
+                            <h1>You've listened to a new song!</h1>
+                            <h2>Good Job!!</h2>
+                            <img src="properties/amount.gif">
+                        </body>
+                    </html>"""
 
             current_page.write(html_template)
 

@@ -13,6 +13,12 @@ DIVIDER = '~'
 
 
 def handl_client(sock, tid, db):
+    """
+    handles client requests
+    :param sock: client's socket
+    :param tid: client's number
+    :param db: connection to the data base
+    """
     global exit_all
 
     print("New Client num " + str(tid))
@@ -31,7 +37,6 @@ def handl_client(sock, tid, db):
 
         except socket.error as err:
             if err.errno == 10054:
-                # 'Connection reset by peer'
                 print("Error %d Client is Gone. %s reset by peer." % (err.errno, str(sock)))
                 break
             else:
@@ -46,7 +51,9 @@ def handl_client(sock, tid, db):
 
 def do_action(data, db):
     """
-    check what client ask and fill to send with the answer
+    check what client ask and fill to send with the answer.
+    :param data: what the client wants to do
+    :param db: connection to data base
     """
     to_send = "ERR1"
     fields = data.split(DIVIDER)
@@ -77,12 +84,20 @@ def do_action(data, db):
         amount = db.get_listened(fields[1])
         if amount == "ERR2":
             return amount
-        to_send = "AOSL" + DIVIDER + amount
+        to_send = "AOSL" + DIVIDER + str(amount)
+    elif action == "ADNS":
+        print(fields[3].isnumeric())
+        if not fields[3].isnumeric():
+            return "ERR3"
+        to_send = db.add_new_song(fields[1], fields[2], int(fields[3]))
 
     return to_send
 
 
 def main():
+    """
+    main server loop
+    """
     global exit_all, user_list
 
     exit_all = False

@@ -6,11 +6,12 @@ import create_html
 from tcp_by_size import send_with_size, recv_by_size
 
 DIVIDER = '~'
-my_account = None
 
 
 def new_listener():
-    global my_account
+    """
+    reqest to add a new listener to the database
+    """
     info = []
     msg = 'NUSR' + DIVIDER
     info.append(str(input("Enter username > ")))
@@ -26,13 +27,13 @@ def new_listener():
 
     print(msg, type(msg))
 
-    my_account = SQL_ORM.Listener(info[0], info[1], info[2], info[3], info[4])
-    print(my_account)
-
     return msg
 
 
 def see_info():
+    """
+    request to see a listener info
+    """
     username = input("enter username > ")
     password = input("enter password > ")
     msg = 'SWLI' + DIVIDER + username + DIVIDER + password
@@ -40,12 +41,40 @@ def see_info():
 
 
 def get_listened_amount():
+    """
+    request the amount of songs a listener listened to
+    """
     username = input("enter username > ")
     msg = "SILT" + DIVIDER + username
     return msg
 
 
+def del_listener():
+    """
+    request to delete a listener
+    """
+    username = input("enter username > ")
+    msg = "DELU" + DIVIDER + username
+    return msg
+
+
+def new_song():
+    """
+    request to add a new song to the listened list
+    """
+    username = input("enter username > ")
+    name = input("enter the song's name > ")
+    rate = input("enter your rate (a number between 0 to 5) > ")
+    msg = "ADNS" + DIVIDER + username + DIVIDER + name + DIVIDER + rate
+    return msg
+
+
 def present_data(data, pen):
+    """
+    present the data with html pages
+    :param data: the data that was received from the server
+    :param pen: the access to the class that creates the html pages
+    """
     fields = data.split(DIVIDER)
     if fields[0] == "NURA":
         pen.new_account_confirmation()
@@ -64,32 +93,24 @@ def present_data(data, pen):
     elif fields[0] == "AOSL":
         pen.amount_of_songs(fields[1])
         return f"You've listened to {fields[1]} songs"
+    elif fields[0] == "NSWA":
+        pen.new_song_added()
+        return "You've listened to a new song!"
     else:
         pen.error_page()
         return "ERROR"
 
 
-def del_listener():
-    username = input("enter username > ")
-    msg = "DELU" + DIVIDER + username
-    return msg
-
-
-def new_song():
-    name = input("enter the song's name > ")
-    rate = input("enter your rate (a number between 0 to 5, can be decimal) > ")
-    msg = "ADDS" + DIVIDER + name + DIVIDER + rate
-    return msg
-
-
 def menu():
+    """
+    return the request built according to the protocol
+    """
     print("1. Create new account\n" + \
           "2. See an account info\n" + \
           "3. Delete an account\n" + \
           "4. Add a song and rating to the list of songs you've listened to\n" + \
           "5. Get how many songs have you listened to\n" + \
-          "6. Change your favorite song\n"
-          "7. Exit\n\n>")
+          "6. Exit\n\n>")
 
     data = input("Enter Num> ")
     msg = ''
@@ -104,8 +125,6 @@ def menu():
     elif data == "5":
         msg = get_listened_amount()
     elif data == "6":
-        pass
-    elif data == "7":
         return "q"
     else:
         return "ERR1"
@@ -113,6 +132,9 @@ def menu():
 
 
 def main():
+    """
+    main client loop
+    """
     cli_s = socket.socket()
 
     cli_s.connect(("127.0.0.1", 4000))
