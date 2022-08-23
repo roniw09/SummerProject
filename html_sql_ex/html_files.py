@@ -2,7 +2,7 @@
 import codecs
 
 # import module
-import webbrowser, sqlite3
+import webbrowser, sqlite3, SQL_ORM, create_html
 
 f = open('GFG.html', 'w')
 
@@ -37,11 +37,24 @@ def insert_new_user(c, username, password, first_name, last_name, favorite_song)
             VALUES ({str(id)}, '{username}', '{password}', '{first_name}', '{last_name}', {listened}, '{favorite_song}')"""
     c.execute(q)
 
-
-with sqlite3.connect("Listeners.db") as db:
-    m = db.cursor()
-    m.execute("DELETE FROM ListenersInfo")
     # table_list = [a[0] for a in
     #               m.execute("SELECT COUNT(*) FROM ListenersInfo WHERE username = 'abc123' AND password = 'abc123'")]
     # insert_new_user(m, 'li', 'df34', 'lili', 'evans', 'sos')
     # print(table_list[0])
+
+with sqlite3.connect('Listeners.db') as db:
+    k = db.cursor()
+    username = input()
+    password = input()
+    sql = f"SELECT * FROM ListenersInfo WHERE username = '{username}' AND password = '{password}'"
+    info = k.execute(sql).fetchone()
+    print(str(info))
+    username = info[1]
+    password = info[2]
+    first_name = info[3]
+    last_name = info[4]
+    sql = "SELECT * FROM dustyBun_listened"
+    res = k.execute(sql).fetchall()
+    print(res)
+    pen = create_html.CreateClientPages()
+    pen.create_info_page(first_name, last_name, username, password, res)

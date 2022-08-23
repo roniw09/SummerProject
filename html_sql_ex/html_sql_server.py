@@ -58,7 +58,15 @@ def do_action(data, db):
 
     if action == 'NUSR':
         db.new_listener(fields[1], fields[2], fields[3], fields[4], fields[5])
-        to_send = "NURA"
+        to_send = 'NURA'
+    if action == 'SWLI':
+        print(fields[1], fields[2])
+        info = db.get_single_listener_info(fields[1], fields[2])
+        to_send = "OLIF" + DIVIDER
+        for x in range(len(info) - 1):
+            to_send += info[x] + DIVIDER
+        to_send += str(info[-1])
+        print(to_send)
 
     return to_send
 

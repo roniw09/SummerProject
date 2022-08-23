@@ -3,33 +3,48 @@ import sqlite3
 import pickle
     # https://docs.python.org/2/library/sqlite3.html
     # https://www.youtube.com/watch?v=U7nfe4adDw8
-
-
-__author__ = 'user'
+import webbrowser
 
 
 class Listener(object):
-    def __init__(self, username, password, first_name, last_name, email):
+    def __init__(self, username, password, first_name, last_name, favorite_song):
         self.username = username
         self.password = password
         self.first_name = first_name
         self.last_name = last_name
-        self.email = email
-        self.songs = []
-        self.songs = []
+        self.favorite_song = favorite_song
+        self.listened = 0
 
     def change_password(self, password):
         self.password = password
 
     def __str__(self):
-        return "listener:" + \
-               "name:" + self.username + "\n" +\
+        return "listener:\n" \
+               "username:" + self.username + "\n" +\
                "password:" + self.password + "\n" +\
                "first name:" + self.first_name+ "\n" + \
-               "last name: " + self.last_name + "\n" + self.email
+               "last name: " + self.last_name + "\n" + \
+               "favorite song: " + self.favorite_song
 
     def update_listened(self, added):
-        self.songs += added
+        self.listened += added
+
+    def get_username(self):
+        return self.username
+
+    def get_password(self):
+        return self.password
+
+    def get_first_name(self):
+        return self.first_name
+
+    def get_last_name(self):
+        return self.last_name
+
+    def get_favorite_song(self):
+        return self.favorite_song
+
+
 
 
 class ListenersORM():
@@ -68,42 +83,49 @@ class ListenersORM():
         self.open_DB()
 
         usr=None
-        # sql= "SELECT ................ "
-        res= self.current.execute(sql)
+        sql = f"""SELECT * FROM ListenersInfo 
+                  WHERE username = '{username}'"""
 
+        res = [m for m in self.current.execute(sql)][0]
+        info = []
+        for x in res:
+            info.append(x)
 
 
 
          
         self.close_DB()
-        return usr
+        return info
     
-    def GetAccounts(self):
-        pass
-    def GetUsers(self):
+    def get_single_listener_info(self, username, password):
+        with sqlite3.connect("Listeners.db") as db:
+            c = db.cursor()
+            sql = f"""SELECT * 
+                      FROM ListenersInfo 
+                      WHERE username = '{username}' AND password = '{password}'"""
+            info = c.execute(sql).fetchone()
+            username = info[1]
+            password = info[2]
+            first_name = info[3]
+            last_name = info[4]
+
+            sql = f"SELECT * FROM {username}_listened"
+            res = c.execute(sql).fetchall()
+            return [username, password, first_name, last_name, res]
+
+
+    def get_amount_of_listened_songs(self,username):
         self.open_DB()
-        usrs=[]
-
-
-
-
-
-
+        sql = "SELECT listened FROM ListenersInfo WHERE and username='"+username+"'"
+        res = [x[0] for x in self.current.execute(sql)][0]
         self.close_DB()
+        return res
 
-        return usrs
-
-
-
-    def get_user_balance(self,username):
+    def get_amount_of_users(self):
         self.open_DB()
-
-        sql="SELECT a.Balance FROM Accounts a , Users b WHERE a.Accountid=b.Accountid and b.Username='"+username+"'"
-        res = self.current.execute(sql)
-        for ans in res:
-            balance =  ans[0]
+        id = [x[0] for x in self.current.execute("SELECT COUNT(*) FROM ListenersInfo")][0]
         self.close_DB()
-        return balance
+        return id
 
 
     #__________________________________________________________________________________________________________________
@@ -121,7 +143,7 @@ class ListenersORM():
     def new_listener(self,username,password,first_name,last_name, favorite_song):
         with sqlite3.connect("Listeners.db") as db:
             c = db.cursor()
-            id = [x[0] for x in c.execute("SELECT COUNT(*) FROM ListenersInfo")][0] + 1
+            id = self.get_amount_of_users() + 1
             print(id)
             listened = 0
             q = f"""INSERT INTO ListenersInfo
@@ -131,6 +153,10 @@ class ListenersORM():
                                             song_name TEXT,
                                             raiting REAL)"""
             c.execute(q)
+            q = f"""INSERT INTO {username}_listened
+                    VALUES ('{favorite_song}', 5)"""
+            c.execute(q)
+
 
     def update_user(self,user):
         self.open_DB()
