@@ -31,7 +31,7 @@ class CreateClientPages:
                 </style>
                 <head>
                     <title>Info</title>
-                    <link rel="icon" href="properties/icon2.png"></link>
+                    <link rel="icon" href="properties/icon.png"></link>
                 </head>"""
             html_template += f"""<body style="font-family: assistant">
                     <h2>Welcome {first_name} {last_name}, here's your info:</h2>
@@ -45,14 +45,18 @@ class CreateClientPages:
                     <table border="2" style="width:50%; align-content: center; text-align: center">
                         <tr>
                             <th>song</th>
+                            <th>artist</th>
+                            <th>release year</th>
                             <th>rate</th>
                         </tr>"""
 
             table_content = ""
-            for x in range(0, len(songs_and_rate), 2):
+            for x in range(0, len(songs_and_rate), 4):
                 table_content += f"""<tr>
                                         <td>{songs_and_rate[x]}</td>
                                         <td>{songs_and_rate[x + 1]}</td>
+                                        <td>{songs_and_rate[x + 2]}</td>
+                                        <td>{songs_and_rate[x + 3]}</td>
                                      </tr>
                                   """
             html_template += table_content + """</body>

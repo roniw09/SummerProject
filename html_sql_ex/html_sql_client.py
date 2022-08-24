@@ -19,6 +19,8 @@ def new_listener():
     info.append(str(input("Enter first name > ")))
     info.append(str(input("Enter last name > ")))
     info.append(str(input("Enter favorite song > ")))
+    info.append(str(input("Enter favorite song's artist > ")))
+    info.append(str(input("Enter favorite song's release year > ")))
 
     for x in range(len(info) - 1):
         msg += info[x] + DIVIDER
@@ -62,7 +64,9 @@ def new_song():
     username = input("enter username > ")
     name = input("enter the song's name > ")
     rate = input("enter your rate (a number between 0 to 5) > ")
-    msg = "ADNS" + DIVIDER + username + DIVIDER + name + DIVIDER + rate
+    artist = input("Enter favorite song's artist > ")
+    year = input("Enter favorite song's release year > ")
+    msg = "ADNS" + DIVIDER + username + DIVIDER + name + DIVIDER + artist + DIVIDER + year + DIVIDER + rate
     return msg
 
 

@@ -3,7 +3,7 @@ __author__ = 'Roni Weiss'
 import socket
 import SQL_ORM
 
-import queue, threading, time, random
+import threading
 from tcp_by_size import send_with_size, recv_by_size
 
 DEBUG = True
@@ -64,7 +64,9 @@ def do_action(data, db):
         print("Got client request " + action + " -- " + str(fields))
 
     if action == 'NUSR':
-        msg = db.new_listener(fields[1], fields[2], fields[3], fields[4], fields[5])
+        user = SQL_ORM.Listener(fields[1], fields[2], fields[3], fields[4], fields[5])
+        song = SQL_ORM.Song(fields[5], fields[6], fields[7], fields[1])
+        msg = db.new_listener(user, song)
         if msg == "OK":
             to_send = 'NURA'
         else:
@@ -86,10 +88,11 @@ def do_action(data, db):
             return amount
         to_send = "AOSL" + DIVIDER + str(amount)
     elif action == "ADNS":
-        print(fields[3].isnumeric())
-        if not fields[3].isnumeric():
+        song = SQL_ORM.Song(fields[2], fields[3], fields[4], fields[1])
+        print(song)
+        if not fields[5].isnumeric():
             return "ERR2"
-        to_send = db.add_new_song(fields[1], fields[2], int(fields[3]))
+        to_send = db.add_new_song(song, int(fields[5]))
 
     return to_send
 
@@ -112,7 +115,7 @@ def main():
 
     threads = []
     i = 1
-    while i < 3:
+    while i < 6:
         cli_s, addr = s.accept()
         t = threading.Thread(target=handl_client, args=(cli_s, i, db))
         t.start()
