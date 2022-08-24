@@ -112,7 +112,7 @@ def main():
 
     threads = []
     i = 1
-    while i < 5:
+    while i < 3:
         cli_s, addr = s.accept()
         t = threading.Thread(target=handl_client, args=(cli_s, i, db))
         t.start()

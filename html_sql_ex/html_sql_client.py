@@ -19,13 +19,10 @@ def new_listener():
     info.append(str(input("Enter first name > ")))
     info.append(str(input("Enter last name > ")))
     info.append(str(input("Enter favorite song > ")))
-    print(info)
 
     for x in range(len(info) - 1):
         msg += info[x] + DIVIDER
     msg += info[-1]
-
-    print(msg, type(msg))
 
     return msg
 
@@ -80,14 +77,11 @@ def present_data(data, pen):
         pen.new_account_confirmation()
         return "Account created successfully"
     elif fields[0] == "OLIF":
-        print(fields[5])
         data = fields[5].split("|")
         data = data[:-1]
-        print(data)
         songs_and_rate = []
         for x in data:
             songs_and_rate.append(x)
-        print(songs_and_rate)
         pen.create_info_page(fields[1], fields[2], fields[3], fields[4], songs_and_rate)
         return "Page displayed successfully"
     elif fields[0] == "DELT":
@@ -144,24 +138,21 @@ def main():
     pen = create_html.CreateClientPages()
 
     while True:
-        try:
-            data = menu()
-            print(data, type(data))
+        data = menu()
 
-            if data == "q":
-                send_with_size(cli_s, "EXIT")
-                break
-            send_with_size(cli_s, data)
-
-            data = recv_by_size(cli_s)
-            if data == "":
-                print("seems server DC")
-                break
-            data = present_data(data, pen)
-            print("Got>>" + data)
-        except Exception as E:
-            print("server DC: " + E)
+        if data == "q":
+            send_with_size(cli_s, "EXIT")
             break
+        send_with_size(cli_s, data)
+
+        data = recv_by_size(cli_s)
+        if data == "":
+            print("seems server DC")
+            break
+        data = present_data(data, pen)
+        print("Got>>" + data)
+
+    cli_s.close()
 
 
 if __name__ == '__main__':
