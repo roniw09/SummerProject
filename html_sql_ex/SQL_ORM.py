@@ -2,7 +2,19 @@ import sqlite3
 
 
 class Listener(object):
+    """
+    a listener
+    """
+
     def __init__(self, username, password, first_name, last_name, favorite_song):
+        """
+        creating object
+        :param username: the listener's username
+        :param password: the listener's password
+        :param first_name: the listener's first_name
+        :param last_name: the listener's last_name
+        :param favorite_song: the listener's favorite_song
+        """
         self.username = username
         self.password = password
         self.first_name = first_name
@@ -10,15 +22,27 @@ class Listener(object):
         self.favorite_song = favorite_song
 
     def get_username(self):
+        """
+        return the username
+        """
         return self.username
 
     def get_password(self):
+        """
+        return the password
+        """
         return self.password
 
     def get_first_name(self):
+        """
+        return first name
+        """
         return self.first_name
 
     def get_last_name(self):
+        """
+        return last name
+        """
         return self.last_name
 
     def __str__(self):
@@ -27,6 +51,14 @@ class Listener(object):
 
 class Song(object):
     def __init__(self, name, artist, release_year, who_added):
+        """
+        creating object
+        :param password: the listener's password
+        :param name: the listener's first_name
+        :param last_name: the listener's last_name
+        :param favorite_song: the listener's favorite_song
+        :param who_added: the listener's username
+        """
         self.name = name
         self.artist = artist
         self.release_year = release_year
@@ -172,3 +204,20 @@ class ListenersORM:
                     WHERE username = '{song.get_who_added()}';"""
             c.execute(q)
             return "NSWA"
+
+    def get_all_info(self):
+        with sqlite3.connect("Listeners.db") as db:
+            c = db.cursor()
+            sql = """SELECT *
+                     FROM ListenersInfo
+                     JOIN Songs
+                        ON Songs.username = ListenersInfo.username
+                     ORDER BY username;"""
+            res = c.execute(sql).fetchall()
+            data_str = ""
+            for x in res:
+                for y in x[:4]:
+                    data_str += str(y) + "|"
+                for y in x[7:]:
+                    data_str += str(y) + "|"
+            return data_str

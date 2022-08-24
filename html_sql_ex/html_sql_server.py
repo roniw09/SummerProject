@@ -93,7 +93,10 @@ def do_action(data, db):
         if not fields[5].isnumeric():
             return "ERR2"
         to_send = db.add_new_song(song, int(fields[5]))
-
+    elif action == "GALD":
+        to_send = "AIDB" + DIVIDER + db.get_all_info()
+        if not to_send:
+            return "ERR1"
     return to_send
 
 

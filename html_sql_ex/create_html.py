@@ -191,3 +191,51 @@ class CreateClientPages:
             current_page.write(html_template)
 
         webbrowser.open('page.html')
+
+    def present_database(self, data):
+        self.clear_page()
+        with open('page.html', 'w') as current_page:
+            html_template = "<!DOCTYPE html>" + """
+                    <html>
+                        <style>
+                            body{background-color:#add8e6; font-family: assistant;}
+                        </style>
+                        <head>
+                            <title>Info</title>
+                            <link rel="icon" href="properties/icon.png"></link>
+                        </head>
+                        <body style="font-family: assistant">
+                            <h2>All Data:</h2>
+                            <table border="2" style="width:50%; align-content: center; text-align: center">
+                                <tr>
+                                    <th>username</th>
+                                    <th>password</th>
+                                    <th>first_name</th>
+                                    <th>last_name</th>
+                                    <th>song</th>
+                                    <th>artist</th>
+                                    <th>release year</th>
+                                    <th>rate</th>
+                                </tr>"""
+
+            table_content = ""
+            for x in range(0, len(data), 8):
+                print(x)
+                table_content += f"""<tr>
+                                                <td>{data[x]}</td>
+                                                <td>{data[x + 1]}</td>
+                                                <td>{data[x + 2]}</td>
+                                                <td>{data[x + 3]}</td>
+                                                <td>{data[x + 4]}</td>
+                                                <td>{data[x + 5]}</td>
+                                                <td>{data[x + 6]}</td>
+                                                <td>{data[x + 7]}</td>
+                                             </tr>
+                                          """
+            html_template += table_content + """</body>
+                            </html>
+                            """
+
+            current_page.write(html_template)
+
+        webbrowser.open('page.html')

@@ -64,8 +64,8 @@ def new_song():
     username = input("enter username > ")
     name = input("enter the song's name > ")
     rate = input("enter your rate (a number between 0 to 5) > ")
-    artist = input("Enter favorite song's artist > ")
-    year = input("Enter favorite song's release year > ")
+    artist = input("Enter song's artist > ")
+    year = input("Enter song's release year > ")
     msg = "ADNS" + DIVIDER + username + DIVIDER + name + DIVIDER + artist + DIVIDER + year + DIVIDER + rate
     return msg
 
@@ -97,6 +97,11 @@ def present_data(data, pen):
     elif fields[0] == "NSWA":
         pen.new_song_added()
         return "You've listened to a new song!"
+    elif fields[0] == "AIDB":
+        data_list = fields[-1].split("|")[:-1]
+        print(data_list)
+        pen.present_database(data_list)
+        return "All database info presented"
     else:
         pen.error_page()
         return "ERROR"
@@ -111,7 +116,8 @@ def menu():
           "3. Delete an account\n" + \
           "4. Add a song and rating to the list of songs you've listened to\n" + \
           "5. Get how many songs have you listened to\n" + \
-          "6. Exit\n\n>")
+          "6. Get all the data in database\n" + \
+          "7. Exit\n\n>")
 
     data = input("Enter Num> ")
     msg = ''
@@ -126,6 +132,8 @@ def menu():
     elif data == "5":
         msg = get_listened_amount()
     elif data == "6":
+        msg = "GALD"
+    elif data == "7":
         return "q"
     else:
         return "ERR1"
