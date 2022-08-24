@@ -88,7 +88,7 @@ def do_action(data, db):
     elif action == "ADNS":
         print(fields[3].isnumeric())
         if not fields[3].isnumeric():
-            return "ERR3"
+            return "ERR2"
         to_send = db.add_new_song(fields[1], fields[2], int(fields[3]))
 
     return to_send
