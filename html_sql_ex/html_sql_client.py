@@ -80,7 +80,10 @@ def present_data(data, pen):
         pen.new_account_confirmation()
         return "Account created successfully"
     elif fields[0] == "OLIF":
-        data = fields[5][3:-2].split("', ")
+        print(fields[5])
+        data = fields[5].split("|")
+        data = data[:-1]
+        print(data)
         songs_and_rate = []
         for x in data:
             songs_and_rate.append(x)
@@ -141,20 +144,24 @@ def main():
     pen = create_html.CreateClientPages()
 
     while True:
-        data = menu()
-        print(data, type(data))
+        try:
+            data = menu()
+            print(data, type(data))
 
-        if data == "q":
-            send_with_size(cli_s, "EXIT")
-            break
-        send_with_size(cli_s, data)
+            if data == "q":
+                send_with_size(cli_s, "EXIT")
+                break
+            send_with_size(cli_s, data)
 
-        data = recv_by_size(cli_s)
-        if data == "":
-            print("seems server DC")
+            data = recv_by_size(cli_s)
+            if data == "":
+                print("seems server DC")
+                break
+            data = present_data(data, pen)
+            print("Got>>" + data)
+        except Exception as E:
+            print("server DC: " + E)
             break
-        data = present_data(data, pen)
-        print("Got>>" + data)
 
 
 if __name__ == '__main__':

@@ -20,6 +20,7 @@ class CreateClientPages:
         :param first_name: the listener's first name
         :param last_name: the listener's last name
         :param favorite_song: the listener's favorite song
+        :param songs_and_rate: list of the songs a listener listened to
         """
         self.clear_page()
         with open('page.html', 'w') as current_page:

@@ -53,14 +53,18 @@ class ListenersORM():
             info = c.execute(sql).fetchone()
             if not info:
                 return 'err2'
-            username = info[1]
-            password = info[2]
-            first_name = info[3]
-            last_name = info[4]
+            username = info[0]
+            password = info[1]
+            first_name = info[2]
+            last_name = info[3]
 
             sql = f"SELECT * FROM {username}_listened"
             res = c.execute(sql).fetchall()
-            return [username, password, first_name, last_name, res]
+            list = ''
+            for x in range(len(res)):
+                for i in range(len(res[x])):
+                    list += str(res[x][i]) + "|"
+            return [username, password, first_name, last_name, list]
 
     def new_listener(self, username, password, first_name, last_name, favorite_song):
         """
@@ -77,11 +81,9 @@ class ListenersORM():
             print(twice)
             if twice:
                 return "ERR2"
-            id = self.get_amount_of_users() + 1
-            print(id)
             listened = 0
             q = f"""INSERT INTO ListenersInfo
-                    VALUES ({str(id)}, '{username}', '{password}', '{first_name}', '{last_name}', {listened}, '{favorite_song}')"""
+                    VALUES ('{username}', '{password}', '{first_name}', '{last_name}', {listened}, '{favorite_song}')"""
             c.execute(q)
             q = f"""CREATE TABLE {username}_listened(
                                             song_name TEXT,
