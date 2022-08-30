@@ -1,3 +1,5 @@
+__author__ = 'Roni Weiss'
+
 import sqlite3
 
 

@@ -1,4 +1,4 @@
-__author__ = 'Yossi'
+__author__ = 'Roni Weiss'
 
 import socket, SQL_ORM
 

@@ -1,3 +1,6 @@
+__author__ = 'Roni Weiss'
+
+
 import webbrowser
 
 HEADER = "<!DOCTYPE html>"
